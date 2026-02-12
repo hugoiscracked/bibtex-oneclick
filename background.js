@@ -1,18 +1,40 @@
 const api = typeof browser !== "undefined" ? browser : chrome;
 
-let collection = [];
+let sessionCollection = [];
 
 api.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
   if (msg.type === "storeBibtex") {
-    if (!collection.includes(msg.text)) {
-      collection.push(msg.text);
+    const { cid, text } = msg;
+
+    if (!sessionCollection.some((e) => e.cid === cid)) {
+      sessionCollection.push({ cid, text });
     }
+
+    api.storage.local.get({ allTimeCollection: [] }, (data) => {
+      const allTime = data.allTimeCollection;
+      if (!allTime.some((e) => e.cid === cid)) {
+        allTime.push({ cid, text });
+        api.storage.local.set({ allTimeCollection: allTime });
+      }
+    });
     return;
   }
 
   if (msg.type === "getBibtexCollection") {
-    sendResponse({ collection });
-    return;
+    api.storage.local.get({ allTimeCollection: [] }, (data) => {
+      sendResponse({
+        session: sessionCollection,
+        allTime: data.allTimeCollection,
+      });
+    });
+    return true;
+  }
+
+  if (msg.type === "getCollectedCids") {
+    api.storage.local.get({ allTimeCollection: [] }, (data) => {
+      sendResponse(data.allTimeCollection.map((e) => e.cid));
+    });
+    return true;
   }
 
   if (msg.type !== "fetchBibtex") return;

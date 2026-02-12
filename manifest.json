@@ -3,7 +3,7 @@
   "name": "BibTeX One-Click",
   "version": "1.0",
   "description": "Copy BibTeX from Google Scholar with one click.",
-  "permissions": ["clipboardWrite"],
+  "permissions": ["clipboardWrite", "storage"],
   "host_permissions": ["https://scholar.googleusercontent.com/*"],
   "background": {
     "scripts": ["background.js"],

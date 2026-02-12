@@ -5,6 +5,7 @@ function createButton(cid) {
   const btn = document.createElement("a");
   btn.className = "bibtex-oneclick-btn";
   btn.textContent = "BibTeX";
+  btn.dataset.cid = cid;
   btn.href = "#";
   btn.addEventListener("click", (e) => {
     e.preventDefault();
@@ -16,7 +17,7 @@ function createButton(cid) {
 }
 
 async function handleClick(btn, cid) {
-  btn.classList.remove("success", "error");
+  btn.classList.remove("success", "error", "collected");
   btn.classList.add("loading");
   btn.textContent = "...";
 
@@ -40,14 +41,15 @@ async function handleClick(btn, cid) {
     if (result.error) throw new Error(result.error);
 
     await navigator.clipboard.writeText(result.text);
-    api.runtime.sendMessage({ type: "storeBibtex", text: result.text });
+    api.runtime.sendMessage({ type: "storeBibtex", cid, text: result.text });
 
     btn.classList.remove("loading");
     btn.classList.add("success");
     btn.textContent = "\u2713 Copied!";
     setTimeout(() => {
       btn.classList.remove("success");
-      btn.textContent = "BibTeX";
+      btn.classList.add("collected");
+      btn.textContent = "\u2713 BibTeX";
     }, 2000);
   } catch (err) {
     console.error("BibTeX One-Click:", err);
@@ -76,11 +78,31 @@ function injectButtons(root) {
   }
 }
 
+function markCollectedButtons(cids) {
+  const cidSet = new Set(cids);
+  const buttons = document.querySelectorAll(".bibtex-oneclick-btn[data-cid]");
+  for (const btn of buttons) {
+    if (cidSet.has(btn.dataset.cid)) {
+      btn.classList.add("collected");
+      btn.textContent = "\u2713 BibTeX";
+    }
+  }
+}
+
 injectButtons(document);
+
+api.runtime.sendMessage({ type: "getCollectedCids" }, (cids) => {
+  if (cids && cids.length) markCollectedButtons(cids);
+});
 
 const container = document.getElementById("gs_res_ccl_mid");
 if (container) {
-  new MutationObserver(() => injectButtons(container)).observe(container, {
+  new MutationObserver(() => {
+    injectButtons(container);
+    api.runtime.sendMessage({ type: "getCollectedCids" }, (cids) => {
+      if (cids && cids.length) markCollectedButtons(cids);
+    });
+  }).observe(container, {
     childList: true,
     subtree: true,
   });
