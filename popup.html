@@ -5,14 +5,25 @@
   <link rel="stylesheet" href="popup.css">
 </head>
 <body>
-  <h1>BibTeX Collection</h1>
+  <div class="header">
+    <h1>BibTeX Collection</h1>
+    <div class="settings-wrap">
+      <button id="settings-btn" title="Settings">&#9881;</button>
+      <div id="settings-menu" class="settings-menu hidden">
+        <button id="clear-alltime">Clear All-Time Data</button>
+      </div>
+    </div>
+  </div>
   <div class="tabs">
     <button class="tab active" data-tab="session">Session</button>
     <button class="tab" data-tab="alltime">All Time</button>
   </div>
   <p id="count"></p>
   <textarea id="bibtex" readonly></textarea>
-  <button id="copy-all">Copy All</button>
+  <div class="button-row">
+    <button id="copy-all">Copy All</button>
+    <button id="clear-session">Clear Session</button>
+  </div>
   <script src="popup.js"></script>
 </body>
 </html>

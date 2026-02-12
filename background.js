@@ -37,6 +37,19 @@ api.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
     return true;
   }
 
+  if (msg.type === "clearSession") {
+    sessionCollection = [];
+    sendResponse({ ok: true });
+    return;
+  }
+
+  if (msg.type === "clearAllTime") {
+    api.storage.local.set({ allTimeCollection: [] }, () => {
+      sendResponse({ ok: true });
+    });
+    return true;
+  }
+
   if (msg.type !== "fetchBibtex") return;
 
   try {

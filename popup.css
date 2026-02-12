@@ -9,10 +9,68 @@ body {
   box-sizing: border-box;
 }
 
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
 h1 {
   font-size: 15px;
-  margin: 0 0 4px;
+  margin: 0;
   color: #333;
+}
+
+.settings-wrap {
+  position: relative;
+}
+
+#settings-btn {
+  background: none;
+  border: none;
+  font-size: 16px;
+  color: #999;
+  cursor: pointer;
+  padding: 0 2px;
+  line-height: 1;
+}
+
+#settings-btn:hover {
+  color: #555;
+}
+
+.settings-menu {
+  position: absolute;
+  right: 0;
+  top: 100%;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  z-index: 10;
+  white-space: nowrap;
+}
+
+.settings-menu button {
+  display: block;
+  width: 100%;
+  padding: 8px 14px;
+  font-size: 12px;
+  font-family: Arial, sans-serif;
+  color: #c5221f;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+}
+
+.settings-menu button:hover {
+  background: #fce8e6;
+}
+
+.hidden {
+  display: none !important;
 }
 
 .tabs {
@@ -61,8 +119,14 @@ h1 {
   width: 100%;
 }
 
-#copy-all {
+.button-row {
+  display: flex;
+  gap: 8px;
   margin-top: 8px;
+}
+
+#copy-all {
+  flex: 1;
   padding: 6px 0;
   font-size: 13px;
   color: #fff;
@@ -79,4 +143,19 @@ h1 {
 #copy-all:disabled {
   background-color: #a0c4ff;
   cursor: default;
+}
+
+#clear-session {
+  padding: 6px 12px;
+  font-size: 13px;
+  color: #666;
+  background: none;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+#clear-session:hover {
+  color: #c5221f;
+  border-color: #c5221f;
 }
